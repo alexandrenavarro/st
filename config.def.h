@@ -5,7 +5,8 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+ // Improvement : increase from 12 to 13
+static char *font = "Liberation Mono:pixelsize=13:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -288,7 +289,11 @@ static Key key[] = {
 	{ XK_Up,            Mod1Mask,       "\033[1;3A",     0,    0},
 	{ XK_Up,         ShiftMask|Mod1Mask,"\033[1;4A",     0,    0},
 	{ XK_Up,            ControlMask,    "\033[1;5A",     0,    0},
-	{ XK_Up,      ShiftMask|ControlMask,"\033[1;6A",     0,    0},
+
+	// Fix problem for micro for Ctrl + Shift + Up : I don't know sequence code terminal, so prefer to let like Ctrl + Up
+	//{ XK_Up,      ShiftMask|ControlMask,"\033[1;6A",     0,    0},
+	{ XK_Up,      ShiftMask|ControlMask,"\033[1;5A",     0,    0},
+
 	{ XK_Up,       ControlMask|Mod1Mask,"\033[1;7A",     0,    0},
 	{ XK_Up,ShiftMask|ControlMask|Mod1Mask,"\033[1;8A",  0,    0},
 	{ XK_Up,            XK_ANY_MOD,     "\033[A",        0,   -1},
@@ -297,7 +302,11 @@ static Key key[] = {
 	{ XK_Down,          Mod1Mask,       "\033[1;3B",     0,    0},
 	{ XK_Down,       ShiftMask|Mod1Mask,"\033[1;4B",     0,    0},
 	{ XK_Down,          ControlMask,    "\033[1;5B",     0,    0},
-	{ XK_Down,    ShiftMask|ControlMask,"\033[1;6B",     0,    0},
+
+	// Fix problem for micro for Ctrl + Shift + Down : I don't know sequence code terminal, so prefer to let like Ctrl + Down
+	//{ XK_Down,    ShiftMask|ControlMask,"\033[1;6B",     0,    0},
+	{ XK_Down,    ShiftMask|ControlMask,"\033[1;5B",     0,    0},
+
 	{ XK_Down,     ControlMask|Mod1Mask,"\033[1;7B",     0,    0},
 	{ XK_Down,ShiftMask|ControlMask|Mod1Mask,"\033[1;8B",0,    0},
 	{ XK_Down,          XK_ANY_MOD,     "\033[B",        0,   -1},
@@ -337,21 +346,71 @@ static Key key[] = {
 	{ XK_Delete,        XK_ANY_MOD,     "\033[3~",      +1,    0},
 	{ XK_BackSpace,     XK_NO_MOD,      "\177",          0,    0},
 	{ XK_BackSpace,     Mod1Mask,       "\033\177",      0,    0},
-	{ XK_Home,          ShiftMask,      "\033[2J",       0,   -1},
-	{ XK_Home,          ShiftMask,      "\033[1;2H",     0,   +1},
+
+    // Fix problem for micro for Shift + Ctrl + Home : it does not work (it should, the mask is no recognize), let Ctrl + Home
+    //{ XK_Home,    ShiftMask|ControlMask,"\033[1;6A",     0,    0},
+    //{ XK_Home,    ShiftMask|ControlMask,"\033[1;5H",    0,    0},
+    { XK_Home,     ShiftMask|ControlMask,"\033[1;6A",     0,    0},
+
+	// Fix problem for micro for Shift + Home
+	//{ XK_Home,          ShiftMask,      "\033[2J",       0,   -1},
+	{ XK_Home,          ShiftMask,      "\033[1;2H",     0,    0},
+
+	// Fix problem for micro for Ctrl + Home
+    { XK_Home,          ControlMask,    "\033[1;5H",     0,    0},
+
 	{ XK_Home,          XK_ANY_MOD,     "\033[H",        0,   -1},
 	{ XK_Home,          XK_ANY_MOD,     "\033[1~",       0,   +1},
-	{ XK_End,           ControlMask,    "\033[J",       -1,    0},
-	{ XK_End,           ControlMask,    "\033[1;5F",    +1,    0},
-	{ XK_End,           ShiftMask,      "\033[K",       -1,    0},
-	{ XK_End,           ShiftMask,      "\033[1;2F",    +1,    0},
+
+    // Fix problem for micro for Shift + Ctrl + End
+    { XK_End,     ShiftMask|ControlMask,"\033[1;6B",     0,    0},
+    //{ XK_End,     ShiftMask|ControlMask,"\033[1;5F",     0,    0},
+
+	//{ XK_End,           ControlMask,    "\033[J",       -1,    0},
+
+	// Fix problem for micro for Ctrl + End
+	{ XK_End,           ControlMask,    "\033[1;5F",     0,    0},
+
+	// Fix problem for micro for Shift + End
+	//{ XK_End,           ShiftMask,      "\033[K",       -1,    0},
+	{ XK_End,           ShiftMask,      "\033[1;2F",     0,    0},
+
 	{ XK_End,           XK_ANY_MOD,     "\033[4~",       0,    0},
-	{ XK_Prior,         ControlMask,    "\033[5;5~",     0,    0},
+
+	// Fix problem for micro for Ctrl + PageUp, map to Alt,
+	{ XK_Prior,         ControlMask,    "\033,",         0,    0},
+	//{ XK_Prior,         ControlMask,    "\033[85;6u",    0,    0},
+    //{ XK_Prior,         XK_ANY_MOD,     "\033[5~",       0,    0},
+
+    // Fix problem for micro for PageUp
+    { XK_Prior,         XK_NO_MOD,      "\033[5~",       0,    0},
+	//{ XK_Prior,         ControlMask,    "\033[5;5~",     0,    0},
+
 	{ XK_Prior,         ShiftMask,      "\033[5;2~",     0,    0},
-	{ XK_Prior,         XK_ANY_MOD,     "\033[5~",       0,    0},
-	{ XK_Next,          ControlMask,    "\033[6;5~",     0,    0},
+
+	// Fix problem for micro for Ctrl + PageDown, map to Alt.
+	//{ XK_Next,          ControlMask,    "\033[6;5~",     0,    0},
+    { XK_Next,          ControlMask,    "\033.",         0,    0},
+    //{ XK_Next,          ControlMask,    "\033[86;6u",    0,    0},
+
+    // Fix problem for micro for PageDown
+    { XK_Next,          XK_NO_MOD,      "\033[6~",       0,    0},
 	{ XK_Next,          ShiftMask,      "\033[6;2~",     0,    0},
-	{ XK_Next,          XK_ANY_MOD,     "\033[6~",       0,    0},
+	//{ XK_Next,          XK_ANY_MOD,     "\033[6~",       0,    0},
+
+//	{ XK_Prior,        XK_NO_MOD,                      "\033[5~",     0,  0},
+//	{ XK_Prior,        ControlMask|ShiftMask,          "\033[85;6u",  0,  0},
+//	{ XK_Prior,        Mod1Mask,                       "\033[85;3u",  0,  0},
+//	{ XK_Prior,        Mod1Mask|ControlMask,           "\033[85;7u",  0,  0},
+//	{ XK_Prior,        Mod1Mask|ControlMask|ShiftMask, "\033[85;8u",  0,  0},
+//	{ XK_Prior,        Mod1Mask|ShiftMask,             "\033[85;4u",  0,  0},
+//	{ XK_Next,         XK_NO_MOD,                      "\033[6~",     0,  0},
+//	{ XK_Next,         ControlMask|ShiftMask,          "\033[86;6u",  0,  0},
+//	{ XK_Next,         Mod1Mask,                       "\033[86;3u",  0,  0},
+//	{ XK_Next,         Mod1Mask|ControlMask,           "\033[86;7u",  0,  0},
+//	{ XK_Next,         Mod1Mask|ControlMask|ShiftMask, "\033[86;8u",  0,  0},
+//	{ XK_Next,         Mod1Mask|ShiftMask,             "\033[86;4u",  0,  0},
+
 	{ XK_F1,            XK_NO_MOD,      "\033OP" ,       0,    0},
 	{ XK_F1, /* F13 */  ShiftMask,      "\033[1;2P",     0,    0},
 	{ XK_F1, /* F25 */  ControlMask,    "\033[1;5P",     0,    0},
